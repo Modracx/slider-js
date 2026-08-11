@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@modracx/slider-js/jquery — ES module demo</title>
+    <style>
+      :root { --bg:#12141a; --panel:#1b1e27; --line:#2c3040; --text:#e8eaf0;
+              --muted:#949bb0; --accent:#00a8ff; }
+      * { box-sizing: border-box; }
+      body { margin:0; padding:32px 24px 60px; background:var(--bg); color:var(--text);
+             font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif; }
+      .wrap { max-width:860px; margin:0 auto; }
+      h1 { font-size:22px; margin:0 0 4px; }
+      h2 { font-size:13px; text-transform:uppercase; letter-spacing:.08em;
+           color:var(--muted); margin:34px 0 10px; font-weight:600; }
+      .sub { color:var(--muted); margin:0 0 8px; }
+      code { color:var(--accent); }
+      .frame { background:var(--panel); border:1px solid var(--line);
+               border-radius:10px; overflow:hidden; margin-bottom:10px; }
+      .slide { display:flex; align-items:center; justify-content:center;
+               height:150px; font-size:22px; font-weight:700; border-radius:8px; }
+      .a{background:#1d3a5c}.b{background:#1d5c46}.c{background:#5c3a1d}
+      .d{background:#4a1d5c}.e{background:#5c1d2e}
+      .controls { display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; }
+      button { background:#232734; color:var(--text); border:1px solid var(--line);
+               border-radius:7px; padding:7px 13px; font:inherit; font-size:13px;
+               cursor:pointer; }
+      button:hover { border-color:var(--accent); }
+      .readout { margin-top:10px; color:var(--muted);
+                 font:12px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>@modracx/slider-js/jquery</h1>
+      <p class="sub">
+        The plugin entry point registers <code>$.fn.Slider</code> against a
+        global jQuery on import. Serve over HTTP, not <code>file://</code>.
+      </p>
+
+      <h2>One selector, two carousels</h2>
+      <div class="frame"><div class="deck">
+        <div class="slide a">A · 1</div>
+        <div class="slide b">A · 2</div>
+        <div class="slide c">A · 3</div>
+      </div></div>
+      <div class="frame"><div class="deck">
+        <div class="slide d">B · 1</div>
+        <div class="slide e">B · 2</div>
+        <div class="slide a">B · 3</div>
+      </div></div>
+
+      <div class="controls">
+        <button id="prev">prev both</button>
+        <button id="next">next both</button>
+        <button id="first">goTo(0) both</button>
+        <button id="destroy">destroy both</button>
+      </div>
+      <div class="readout" id="out">—</div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script type="module">
+      // Importing for side effects registers $.fn.Slider on the global jQuery.
+      // With a bundled jQuery instead, use:
+      //   import registerSliderPlugin from "../src/jquery.js";
+      //   registerSliderPlugin($);
+      import "../src/jquery.js";
+
+      $(".deck").Slider("create", { loop: true, speed: 350, spaceBetween: 0 });
+
+      $("#prev").on("click", () => $(".deck").Slider("prev"));
+      $("#next").on("click", () => $(".deck").Slider("next"));
+      $("#first").on("click", () => $(".deck").Slider("goTo", 0));
+      $("#destroy").on("click", () => $(".deck").Slider("destroy"));
+
+      setInterval(() => {
+        const s = $(".deck").Slider("get");
+        $("#out").text(
+          s
+            ? "first deck — index " + $(".deck").Slider("index") +
+              " / " + $(".deck").Slider("length") +
+              " · page " + $(".deck").Slider("page") + " / " + s.pages +
+              " · prev " + s.canGoPrev + " · next " + s.canGoNext
+            : "destroyed — reload to rebuild"
+        );
+      }, 120);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>slider-js — jQuery test runner</title>
+    <style>
+      :root {
+        --bg: #12141a;
+        --panel: #1b1e27;
+        --line: #2c3040;
+        --text: #e8eaf0;
+        --muted: #949bb0;
+        --accent: #00a8ff;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        padding: 32px 24px 80px;
+        background: var(--bg);
+        color: var(--text);
+        font: 15px/1.5 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      }
+      h1 { font-size: 22px; margin: 0 0 4px; }
+      h2 { font-size: 14px; text-transform: uppercase; letter-spacing: .08em;
+           color: var(--muted); margin: 40px 0 12px; font-weight: 600; }
+      .sub { color: var(--muted); margin: 0 0 8px; }
+      .wrap { max-width: 900px; margin: 0 auto; }
+      .note { color: var(--muted); font-size: 13px; margin: 8px 0 0; }
+      code { color: var(--accent); }
+
+      .frame {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        overflow: hidden;
+      }
+      .slide {
+        display: flex; align-items: center; justify-content: center;
+        flex-direction: column; gap: 6px;
+        height: 200px;
+        font-size: 26px; font-weight: 700;
+        background: #232734;
+        border-radius: 8px;
+      }
+      .slide small { font-size: 12px; font-weight: 400; color: var(--muted); }
+      .slide.a { background: #1d3a5c; }
+      .slide.b { background: #1d5c46; }
+      .slide.c { background: #5c3a1d; }
+      .slide.d { background: #4a1d5c; }
+      .slide.e { background: #5c1d2e; }
+      .slide.f { background: #1d505c; }
+
+      .controls { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+      button, select {
+        background: #232734; color: var(--text); border: 1px solid var(--line);
+        border-radius: 7px; padding: 7px 13px; font: inherit; font-size: 13px;
+        cursor: pointer;
+      }
+      button:hover, select:hover { border-color: var(--accent); }
+      .readout {
+        margin-top: 10px; color: var(--muted);
+        font: 12px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>slider-js — jQuery build</h1>
+      <p class="sub">Registers <code>$.fn.Slider</code>. Same engine as the vanilla build.</p>
+
+      <h2>1 · One slide per view, loop, autoplay</h2>
+      <div class="frame"><div id="basic">
+        <div class="slide a">One<small>loop: true · autoplay: 3000</small></div>
+        <div class="slide b">Two<small>hover to pause</small></div>
+        <div class="slide c">Three<small>swipe or drag</small></div>
+        <div class="slide d">Four<small>arrow keys work</small></div>
+      </div></div>
+      <p class="note">Autoplay stops for good on the first interaction.</p>
+
+      <h2>2 · Three per view, group of 1, no loop</h2>
+      <div class="frame"><div id="multi">
+        <div class="slide a" style="height:150px">1</div>
+        <div class="slide b" style="height:150px">2</div>
+        <div class="slide c" style="height:150px">3</div>
+        <div class="slide d" style="height:150px">4</div>
+        <div class="slide e" style="height:150px">5</div>
+        <div class="slide f" style="height:150px">6</div>
+      </div></div>
+      <p class="note">
+        Arrows disable at the ends. The last position sits flush with the track's
+        end rather than scrolling into empty space.
+      </p>
+
+      <h2>3 · Fractional slidesPerView (2.5) with peek</h2>
+      <div class="frame"><div id="peek">
+        <div class="slide a" style="height:130px">1</div>
+        <div class="slide b" style="height:130px">2</div>
+        <div class="slide c" style="height:130px">3</div>
+        <div class="slide d" style="height:130px">4</div>
+        <div class="slide e" style="height:130px">5</div>
+      </div></div>
+
+      <h2>4 · slidesPerView "auto" — natural widths</h2>
+      <div class="frame"><div id="auto">
+        <div class="slide a" style="height:120px;width:160px">160</div>
+        <div class="slide b" style="height:120px;width:260px">260</div>
+        <div class="slide c" style="height:120px;width:120px">120</div>
+        <div class="slide d" style="height:120px;width:320px">320</div>
+        <div class="slide e" style="height:120px;width:200px">200</div>
+      </div></div>
+
+      <h2>5 · Fade effect</h2>
+      <div class="frame" style="height:180px"><div id="fade" style="height:180px">
+        <div class="slide a" style="height:180px">Fade one</div>
+        <div class="slide b" style="height:180px">Fade two</div>
+        <div class="slide c" style="height:180px">Fade three</div>
+      </div></div>
+      <p class="note">Dragging is disabled for fade — there is no track to drag.</p>
+
+      <h2>6 · Groups of 2, loop</h2>
+      <div class="frame"><div id="grouped">
+        <div class="slide a" style="height:140px">1</div>
+        <div class="slide b" style="height:140px">2</div>
+        <div class="slide c" style="height:140px">3</div>
+        <div class="slide d" style="height:140px">4</div>
+        <div class="slide e" style="height:140px">5</div>
+        <div class="slide f" style="height:140px">6</div>
+      </div></div>
+      <p class="note">Two per view, two per step — dots track pages, not slides.</p>
+
+      <h2>7 · Auto-init from data attributes — no JS call</h2>
+      <div class="frame"><div
+        data-slider
+        data-slider-slides-per-view="2"
+        data-slider-space-between="12"
+        data-slider-loop
+        data-slider-speed="500"
+      >
+        <div class="slide a" style="height:130px">data-slider</div>
+        <div class="slide b" style="height:130px">slides-per-view 2</div>
+        <div class="slide c" style="height:130px">loop</div>
+        <div class="slide d" style="height:130px">speed 500</div>
+      </div></div>
+
+      <h2>8 · RTL</h2>
+      <div class="frame"><div id="rtl" dir="rtl">
+        <div class="slide a" style="height:140px">واحد</div>
+        <div class="slide b" style="height:140px">اثنان</div>
+        <div class="slide c" style="height:140px">ثلاثة</div>
+        <div class="slide d" style="height:140px">أربعة</div>
+      </div></div>
+      <p class="note">Arrows swap sides and swipe direction inverts automatically.</p>
+
+      <h2>9 · Autoplay that ends — non-looping</h2>
+      <div class="frame"><div id="endstop">
+        <div class="slide a" style="height:120px">1</div>
+        <div class="slide b" style="height:120px">2</div>
+        <div class="slide c" style="height:120px">3 · then it stops</div>
+      </div></div>
+      <div class="frame" style="margin-top:10px"><div id="endrewind">
+        <div class="slide d" style="height:120px">1</div>
+        <div class="slide e" style="height:120px">2</div>
+        <div class="slide f" style="height:120px">3 · then back to 1</div>
+      </div></div>
+      <p class="note">
+        <code>autoplayEndBehavior</code>: <code>"stop"</code> releases the timer
+        at the last slide, <code>"rewind"</code> returns to the first.
+      </p>
+
+      <h2>10 · Responsive breakpoints — resize the window</h2>
+      <div class="frame"><div id="bp">
+        <div class="slide a" style="height:120px">1</div>
+        <div class="slide b" style="height:120px">2</div>
+        <div class="slide c" style="height:120px">3</div>
+        <div class="slide d" style="height:120px">4</div>
+        <div class="slide e" style="height:120px">5</div>
+        <div class="slide f" style="height:120px">6</div>
+      </div></div>
+      <div class="readout" id="bp-readout">—</div>
+      <p class="note">
+        1 per view below 700px, 2 from 700px, 3 in groups of 3 from 1100px.
+        Overrides fold over the base values, so narrowing again returns to
+        exactly where it started.
+      </p>
+
+      <h2>11 · Live API</h2>
+      <div class="controls">
+        <button data-act="prev">prev</button>
+        <button data-act="next">next</button>
+        <button data-act="first">goTo(0)</button>
+        <button data-act="last">goTo(last)</button>
+        <button data-act="add">add slide</button>
+        <button data-act="destroy">destroy</button>
+        <button data-act="rebuild">rebuild</button>
+      </div>
+      <div class="readout" id="readout">—</div>
+      <div class="frame" style="margin-top:10px"><div id="playground">
+        <div class="slide a" style="height:150px">A</div>
+        <div class="slide b" style="height:150px">B</div>
+        <div class="slide c" style="height:150px">C</div>
+      </div></div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="slider-jquery.js"></script>
+    <script>
+      $(function () {
+        $("#basic").Slider("create", {
+          loop: true, autoplay: 3000, speed: 400,
+          showPauseButton: true, showProgress: true,
+        });
+        $("#multi").Slider("create", { slidesPerView: 3, spaceBetween: 12 });
+        $("#peek").Slider("create", { slidesPerView: 2.5, spaceBetween: 12, dots: false });
+        $("#auto").Slider("create", { slidesPerView: "auto", spaceBetween: 12, dots: false });
+        $("#fade").Slider("create", { effect: "fade", loop: true, speed: 500 });
+        $("#grouped").Slider("create", {
+          slidesPerView: 2, slidesPerGroup: 2, spaceBetween: 12, loop: true,
+        });
+        $("#rtl").Slider("create", { slidesPerView: 2, spaceBetween: 12, loop: true });
+
+        $("#endstop").Slider("create", {
+          autoplay: 1800, loop: false, dots: false, showProgress: true,
+        });
+        $("#endrewind").Slider("create", {
+          autoplay: 1800, loop: false, dots: false, showProgress: true,
+          autoplayEndBehavior: "rewind",
+        });
+        $("#bp").Slider("create", {
+          slidesPerView: 1, spaceBetween: 4,
+          breakpoints: {
+            700: { slidesPerView: 2, spaceBetween: 12 },
+            1100: { slidesPerView: 3, slidesPerGroup: 3, spaceBetween: 24 },
+          },
+        });
+        const bp = $("#bp").Slider("get");
+        function showBp() {
+          $("#bp-readout").text(
+            "viewport " + window.innerWidth + "px · breakpoint " +
+            (bp.activeBreakpoint === null ? "(base)" : bp.activeBreakpoint + "px") +
+            " · slidesPerView " + bp.settings.slidesPerView +
+            " · group " + bp.settings.slidesPerGroup +
+            " · gap " + bp.settings.spaceBetween + " · " + bp.pages + " pages"
+          );
+        }
+        bp.on("update", showBp); bp.on("breakpoint", showBp);
+        $(window).on("resize", showBp); showBp();
+
+        /* ---- section 9 ---- */
+        const $stage = $("#playground");
+        let added = 0;
+        const LETTERS = "DEFGHIJK";
+
+        function build() {
+          $stage.Slider("create", { slidesPerView: 1, loop: true, speed: 300 });
+        }
+        build();
+
+        $(".controls").on("click", "button", function () {
+          const act = this.dataset.act;
+          if (act === "rebuild") return build();
+          if (act === "destroy") return $stage.Slider("destroy");
+          if (!$stage.Slider("get")) return;
+
+          if (act === "prev") $stage.Slider("prev");
+          if (act === "next") $stage.Slider("next");
+          if (act === "first") $stage.Slider("goTo", 0);
+          if (act === "last") $stage.Slider("goTo", $stage.Slider("get").lastIndex);
+          if (act === "add") {
+            const el = $('<div class="slide"></div>')
+              .addClass("abcdef"[added % 6])
+              .css("height", "150px")
+              .text(LETTERS[added++ % LETTERS.length])[0];
+            $stage.Slider("get").addSlide(el);
+          }
+        });
+
+        setInterval(function () {
+          const s = $stage.Slider("get");
+          $("#readout").text(
+            s
+              ? "index: " + $stage.Slider("index") + " / " + $stage.Slider("length") +
+                "   page: " + $stage.Slider("page") + " / " + s.pages +
+                "   raw: " + s.rawPosition +
+                "   prev: " + s.canGoPrev + "   next: " + s.canGoNext
+              : "destroyed — press rebuild"
+          );
+        }, 120);
+      });
+    </script>
+  </body>
+</html>

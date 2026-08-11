@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@modracx/slider-js — ES module demo</title>
+    <style>
+      :root { --bg:#12141a; --panel:#1b1e27; --line:#2c3040; --text:#e8eaf0;
+              --muted:#949bb0; --accent:#00a8ff; }
+      * { box-sizing: border-box; }
+      body { margin:0; padding:32px 24px 60px; background:var(--bg); color:var(--text);
+             font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif; }
+      .wrap { max-width:860px; margin:0 auto; }
+      h1 { font-size:22px; margin:0 0 4px; }
+      h2 { font-size:13px; text-transform:uppercase; letter-spacing:.08em;
+           color:var(--muted); margin:34px 0 10px; font-weight:600; }
+      .sub { color:var(--muted); margin:0 0 8px; }
+      .note { color:var(--muted); font-size:13px; margin:8px 0 0; }
+      code { color:var(--accent); }
+      .frame { background:var(--panel); border:1px solid var(--line);
+               border-radius:10px; overflow:hidden; }
+      .slide { display:flex; align-items:center; justify-content:center;
+               height:180px; font-size:24px; font-weight:700; border-radius:8px; }
+      .a{background:#1d3a5c}.b{background:#1d5c46}.c{background:#5c3a1d}
+      .d{background:#4a1d5c}.e{background:#5c1d2e}
+      .controls { display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; }
+      button { background:#232734; color:var(--text); border:1px solid var(--line);
+               border-radius:7px; padding:7px 13px; font:inherit; font-size:13px;
+               cursor:pointer; }
+      button:hover { border-color:var(--accent); }
+      .readout { margin-top:10px; color:var(--muted);
+                 font:12px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>@modracx/slider-js</h1>
+      <p class="sub">
+        ES module demo — imports straight from <code>../src/index.js</code>,
+        no build step. Serve this over HTTP, not <code>file://</code>.
+      </p>
+
+      <h2>Loop + autoplay</h2>
+      <div class="frame"><div id="hero">
+        <div class="slide a">One</div>
+        <div class="slide b">Two</div>
+        <div class="slide c">Three</div>
+      </div></div>
+
+      <h2>Three per view, engine + navigation only</h2>
+      <div class="frame"><div id="row">
+        <div class="slide a" style="height:130px">1</div>
+        <div class="slide b" style="height:130px">2</div>
+        <div class="slide c" style="height:130px">3</div>
+        <div class="slide d" style="height:130px">4</div>
+        <div class="slide e" style="height:130px">5</div>
+      </div></div>
+      <p class="note">
+        Built with <code>createSlider</code> + <code>attachNavigation</code> and
+        no control layer — so no swipe, no keyboard, no autoplay.
+      </p>
+
+      <h2>Declarative — autoInit(), no per-element call</h2>
+      <div class="frame"><div
+        data-slider
+        data-slider-slides-per-view="2"
+        data-slider-space-between="12"
+        data-slider-loop
+      >
+        <div class="slide a" style="height:130px">data-slider</div>
+        <div class="slide b" style="height:130px">two per view</div>
+        <div class="slide c" style="height:130px">loop</div>
+        <div class="slide d" style="height:130px">no JS call</div>
+      </div></div>
+
+      <h2>Controller API</h2>
+      <div class="controls">
+        <button id="prev">prev</button>
+        <button id="next">next</button>
+        <button id="add">add slide</button>
+        <button id="destroy">destroy</button>
+      </div>
+      <div class="readout" id="out">—</div>
+    </div>
+
+    <script type="module">
+      import Slider, { createSlider, attachNavigation } from "../src/index.js";
+
+      const hero = Slider.create(document.getElementById("hero"), {
+        loop: true,
+        autoplay: 3500,
+        speed: 400,
+      });
+
+      // The granular API: engine first, then only the layers you want.
+      const row = createSlider(document.getElementById("row"), {
+        slidesPerView: 3,
+        spaceBetween: 12,
+      });
+      attachNavigation(row, { dots: true });
+
+      // The package does not auto-run on import — call it yourself.
+      Slider.autoInit();
+
+      let n = 0;
+      document.getElementById("prev").onclick = () => hero.prev();
+      document.getElementById("next").onclick = () => hero.next();
+      document.getElementById("add").onclick = () => {
+        const el = document.createElement("div");
+        el.className = "slide " + "abcde"[n % 5];
+        el.textContent = "Added " + ++n;
+        hero.addSlide(el);
+      };
+      document.getElementById("destroy").onclick = () => hero.destroy();
+
+      const out = document.getElementById("out");
+      hero.on("change", (e) => {
+        out.dataset.lastChange = `${e.previous} → ${e.index}`;
+      });
+      setInterval(() => {
+        const s = Slider.get(document.getElementById("hero"));
+        out.textContent = s
+          ? `index ${s.index}/${s.length} · page ${s.page}/${s.pages} · ` +
+            `autoplay ${s.autoplayRunning ? "on" : "off"} · ` +
+            `paused by [${s.pausedBy.join(", ")}] · ` +
+            `last change ${out.dataset.lastChange || "—"}`
+          : "destroyed — reload to rebuild";
+      }, 120);
+    </script>
+  </body>
+</html>
