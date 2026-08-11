@@ -1,0 +1,71 @@
+{
+  "name": "@modracx/slider-js",
+  "version": "1.0.0",
+  "description": "Lightweight content carousel / slider for web pages — loop, autoplay, swipe, arrows, dots, multiple slides per view, RTL and reduced-motion aware. Zero dependencies.",
+  "type": "module",
+  "sideEffects": [
+    "./src/jquery.js"
+  ],
+  "main": "./src/index.js",
+  "module": "./src/index.js",
+  "types": "./src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "default": "./src/index.js"
+    },
+    "./jquery": {
+      "types": "./src/jquery.d.ts",
+      "default": "./src/jquery.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "slider",
+    "carousel",
+    "slideshow",
+    "gallery",
+    "swipe",
+    "touch",
+    "loop",
+    "autoplay",
+    "slides-per-view",
+    "pagination",
+    "accessibility",
+    "reduced-motion",
+    "rtl",
+    "jquery-plugin",
+    "browser",
+    "zero-dependency"
+  ],
+  "author": "Kenneth D'silva (Modracx)",
+  "license": "MIT",
+  "homepage": "https://github.com/Modracx/slider-js#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Modracx/slider-js.git",
+    "directory": "slider-js"
+  },
+  "bugs": {
+    "url": "https://github.com/Modracx/slider-js/issues"
+  },
+  "peerDependencies": {
+    "jquery": ">=3.0.0"
+  },
+  "peerDependenciesMeta": {
+    "jquery": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
